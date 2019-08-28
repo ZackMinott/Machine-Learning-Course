@@ -27,3 +27,4 @@ X = np.array(ct.fit_transform(X), dtype = np.float)
 #Encoding the Dependent Variables
 from sklearn.preprocessing import LabelEncoder
 y = LabelEncoder().fit_transform(y)
+
