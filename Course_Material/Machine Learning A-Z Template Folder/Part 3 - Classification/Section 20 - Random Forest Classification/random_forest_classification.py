@@ -1,4 +1,4 @@
-# Naive Bayes
+# Random Forest Classification
 
 # Importing the libraries
 import numpy as np
@@ -21,9 +21,9 @@ sc_X = StandardScaler()
 X_train = sc_X.fit_transform(X_train)
 X_test = sc_X.transform(X_test) 
 
-# Fitting the Naive Bayes Classifier to the Training Set
-from sklearn.naive_bayes import GaussianNB
-classifier = GaussianNB()
+# Fitting the Random Forest Classification to the Training Set
+from sklearn.ensemble import RandomForestClassifier
+classifier = RandomForestClassifier(n_estimators = 30, criterion = 'entropy', random_state = 0)
 classifier.fit(X_train, y_train)
 
 #Predicting the Test Set Results
@@ -45,7 +45,7 @@ plt.ylim(X2.min(), X2.max())
 for i, j in enumerate(np.unique(y_set)):
     plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1],
                 c = ListedColormap(('red', 'green'))(i), label = j)
-plt.title('Naive Bayes (Training Set)')
+plt.title('Random Forest Classification (Training Set)')
 plt.xlabel('Age')
 plt.ylabel('Estimated Salary')
 plt.legend()
@@ -63,7 +63,7 @@ plt.ylim(X2.min(), X2.max())
 for i, j in enumerate(np.unique(y_set)):
     plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1],
                 c = ListedColormap(('red', 'green'))(i), label = j)
-plt.title('Naive Bayes (Test Set)')
+plt.title('Random Forest Classification (Test Set)')
 plt.xlabel('Age')
 plt.ylabel('Estimated Salary')
 plt.legend()
