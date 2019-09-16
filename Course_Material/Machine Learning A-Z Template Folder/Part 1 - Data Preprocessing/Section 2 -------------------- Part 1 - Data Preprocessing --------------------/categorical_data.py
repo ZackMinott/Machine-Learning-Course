@@ -28,3 +28,9 @@ X = np.array(ct.fit_transform(X), dtype = np.float)
 from sklearn.preprocessing import LabelEncoder
 y = LabelEncoder().fit_transform(y)
 
+# Feature Scaling
+from sklearn.preprocessing import StandardScaler
+sc_X = StandardScaler()
+X_train = sc_X.fit_transform(X_train)
+X_test = sc_X.transform(X_test)
+
