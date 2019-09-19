@@ -1,4 +1,4 @@
-# Kernel PCA
+# Grid Search
 
 # Importing the libraries
 import numpy as np
@@ -21,23 +21,36 @@ sc_X = StandardScaler()
 X_train = sc_X.fit_transform(X_train)
 X_test = sc_X.transform(X_test) 
 
-# Applying Kernel PCA
-from sklearn.decomposition import KernelPCA
-kpca = KernelPCA(n_components = 2, kernel = 'rbf')
-X_train = kpca.fit_transform(X_train)
-X_test = kpca.transform(X_test)
-
-# Fitting Logistic Regression to the Training Set
-from sklearn.linear_model import LogisticRegression
-classifier = LogisticRegression(random_state = 0)
+# Fitting the Kernel SVM to the Training Set
+from sklearn.svm import SVC
+classifier = SVC(kernel  = 'rbf', random_state = 0)
 classifier.fit(X_train, y_train)
 
 #Predicting the Test Set Results
 y_pred = classifier.predict(X_test)
 
-# Making the Confusion Matrix
+# Making the Confusion Matrix (the confusion matrix is used to see all the correct and incorrect predictions)
 from sklearn.metrics import confusion_matrix
 cm = confusion_matrix(y_test, y_pred)
+
+# Apply k-Fold Cross Validation
+from sklearn.model_selection import cross_val_score
+accuracies = cross_val_score(estimator = classifier, X = X_train, y = y_train, cv = 10)
+accuracies.mean() # relevant evaluation of our model performance
+accuracies.std() # tells us if there is a high or low variance
+
+# Applying Grid Search to find the best model and the best parameters
+from sklearn.model_selection import GridSearchCV
+parameters = [{'C': [1, 10, 100, 1000], 'kernel':['linear']},
+              {'C': [1, 10, 100, 1000], 'kernel':['rbf'], 'gamma':[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]}]
+grid_search = GridSearchCV(estimator = classifier,
+                           param_grid = parameters,
+                           scoring = 'accuracy',
+                           cv = 10,
+                           n_jobs = -1)
+grid_search = grid_search.fit(X_train, y_train)
+best_accuracy = grid_search.best_score_ # this will give us the best accuracy
+best_parameters = grid_search.best_params_ # best parameters for our problem
 
 #Visualising the Training Results
 from matplotlib.colors import ListedColormap
@@ -51,7 +64,7 @@ plt.ylim(X2.min(), X2.max())
 for i, j in enumerate(np.unique(y_set)):
     plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1],
                 c = ListedColormap(('red', 'green'))(i), label = j)
-plt.title('Logistic Regression(Training Set)')
+plt.title('Classifier (Training Set)')
 plt.xlabel('Age')
 plt.ylabel('Estimated Salary')
 plt.legend()
@@ -69,7 +82,7 @@ plt.ylim(X2.min(), X2.max())
 for i, j in enumerate(np.unique(y_set)):
     plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1],
                 c = ListedColormap(('red', 'green'))(i), label = j)
-plt.title('Logistic Regression(Test Set)')
+plt.title('Classifier (Test Set)')
 plt.xlabel('Age')
 plt.ylabel('Estimated Salary')
 plt.legend()

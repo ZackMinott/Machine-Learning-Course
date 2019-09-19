@@ -1,4 +1,4 @@
-# LDA (Linear Discriminany Analysis)
+# LDA (Linear Discriminant Analysis)
 
 # Importing the libraries
 import numpy as np
